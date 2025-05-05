@@ -1,7 +1,17 @@
-<script setup></script>
+<script setup>
+import AppButton from './components/AppButton.vue'
+</script>
 
 <template>
-  <main></main>
+  <main>
+    <AppButton> Начать игру </AppButton>
+  </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
