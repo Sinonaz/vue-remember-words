@@ -9,8 +9,8 @@
     {
       word: 'cat',
       translation: 'кошка',
-      state: 'closed',
-      status: 'pending',
+      state: 'opened',
+      status: 'success',
     },
     {
       word: 'dog',
