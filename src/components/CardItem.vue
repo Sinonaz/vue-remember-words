@@ -2,7 +2,7 @@
   <div class="card" @click="emit('flip')">
     <span class="card__number">06</span>
 
-    <p class="card__word">dust-coat</p>
+    <p class="card__word">{{ word }}</p>
 
     <p class="card__label">Перевернуть</p>
   </div>
@@ -10,6 +10,22 @@
 
 <script setup>
   const emit = defineEmits(['flip', 'update:status'])
+  defineProps({
+    word: String,
+    translation: String,
+    state: {
+      type: String,
+      validator(value) {
+        return ['closed', 'opened'].includes(value)
+      },
+    },
+    status: {
+      type: String,
+      validator(value) {
+        return ['success', 'fail', 'pending'].includes(value)
+      },
+    },
+  })
 </script>
 
 <style>
