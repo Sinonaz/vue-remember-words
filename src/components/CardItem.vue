@@ -11,7 +11,7 @@
 
     <p v-if="state === 'closed'" class="card__label">Перевернуть</p>
 
-    <div v-else class="card__btns">
+    <div v-if="state === 'opened'" class="card__btns">
       <button class="btn-fail">
         <IconFail />
       </button>
