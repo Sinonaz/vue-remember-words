@@ -21,7 +21,7 @@
     {
       word: 'tiger',
       translation: 'тигр',
-      state: 'closed',
+      state: 'opened',
       status: 'fail',
     },
   ])
