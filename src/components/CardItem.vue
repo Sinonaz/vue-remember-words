@@ -1,10 +1,15 @@
 <template>
-  <div class="card" @click="emit('flip')">
+  <div class="card" @click="emit('flip')" :class="status">
     <span class="card__number">06</span>
 
     <p class="card__word">{{ word }}</p>
 
-    <p class="card__label">Перевернуть</p>
+    <p v-if="state === 'closed'" class="card__label">Перевернуть</p>
+
+    <div v-else class="card__btns">
+      <button>fail</button>
+      <button>success</button>
+    </div>
   </div>
 </template>
 

@@ -5,10 +5,14 @@
   import TotalScore from './components/TotalScore.vue'
 
   const score = ref(0)
-  const word = ref('carom')
-  const translation = ref('')
-  const state = ref('closed')
-  const status = ref('pending')
+  const cards = ref([
+    {
+      word: 'carom',
+      translation: '',
+      state: 'closed',
+      status: 'pending',
+    },
+  ])
 </script>
 
 <template>
@@ -20,7 +24,12 @@
     </header>
 
     <div class="cards">
-      <CardItem :word :translation :state :status />
+      <CardItem
+        :word="cards[0].word"
+        :translation="cards[0].translation"
+        :state="cards[0].state"
+        :status="cards[0].status"
+      />
     </div>
 
     <AppButton class="main-btn"> Начать игру </AppButton>
