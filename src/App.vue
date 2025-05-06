@@ -7,10 +7,22 @@
   const score = ref(0)
   const cards = ref([
     {
-      word: 'carom',
-      translation: '',
+      word: 'cat',
+      translation: 'кошка',
       state: 'closed',
       status: 'pending',
+    },
+    {
+      word: 'dog',
+      translation: 'собака',
+      state: 'opened',
+      status: 'success',
+    },
+    {
+      word: 'tiger',
+      translation: 'тигр',
+      state: 'closed',
+      status: 'fail',
     },
   ])
 </script>
@@ -25,10 +37,13 @@
 
     <div class="cards">
       <CardItem
-        :word="cards[0].word"
-        :translation="cards[0].translation"
-        :state="cards[0].state"
-        :status="cards[0].status"
+        v-for="(card, index) in cards"
+        :key="card.word"
+        :number="index + 1"
+        :word="card.word"
+        :state="card.state"
+        :status="card.status"
+        :translation="card.translation"
       />
     </div>
 
@@ -46,6 +61,9 @@
   }
 
   .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 50px 100px;
     flex-grow: 1;
     width: 100%;
   }
