@@ -1,15 +1,35 @@
 <script setup>
+  import { ref } from 'vue'
   import AppButton from './components/AppButton.vue'
-  import AppHeader from './components/AppHeader.vue'
   import CardItem from './components/CardItem.vue'
+  import TotalScore from './components/TotalScore.vue'
+
+  const score = ref(0)
+  const cards = ref([
+    {
+      word: 'carom',
+      translation: '',
+      state: 'closed',
+      status: 'pending',
+    },
+  ])
 </script>
 
 <template>
   <main>
-    <AppHeader />
+    <header>
+      <h1>Запомни слово</h1>
+
+      <TotalScore :value="score" />
+    </header>
 
     <div class="cards">
-      <CardItem />
+      <CardItem
+        :word="cards[0].word"
+        :translation="cards[0].translation"
+        :state="cards[0].state"
+        :status="cards[0].status"
+      />
     </div>
 
     <AppButton class="main-btn"> Начать игру </AppButton>
@@ -34,5 +54,20 @@
     display: block;
     width: fit-content;
     margin: 50px auto 0;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: var(--default);
   }
 </style>
