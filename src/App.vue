@@ -1,30 +1,36 @@
 <script setup>
-  import { ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import AppButton from './components/AppButton.vue'
   import CardItem from './components/CardItem.vue'
   import TotalScore from './components/TotalScore.vue'
 
   const score = ref(0)
-  const cards = ref([
-    {
-      word: 'cat',
-      translation: 'кошка',
-      state: 'opened',
-      status: 'success',
-    },
-    {
-      word: 'dog',
-      translation: 'собака',
-      state: 'opened',
-      status: 'success',
-    },
-    {
-      word: 'tiger',
-      translation: 'тигр',
-      state: 'opened',
-      status: 'fail',
-    },
-  ])
+  const cards = ref([])
+
+  const modifiedCards = computed(() => {
+    if (!cards.value.length) return []
+
+    return cards.value.map((card) => {
+      return {
+        word: card.word,
+        translation: card.translation,
+        state: 'closed',
+        status: 'pending',
+      }
+    })
+  })
+
+  async function fetchCards() {
+    const response = await fetch('http://localhost:8080/api/random-words')
+
+    if (!response.ok) return
+
+    cards.value = await response.json()
+  }
+
+  onMounted(() => {
+    fetchCards()
+  })
 </script>
 
 <template>
@@ -37,13 +43,12 @@
 
     <div class="cards">
       <CardItem
-        v-for="(card, index) in cards"
-        :key="card.word"
-        :number="index + 1"
         :word="card.word"
+        :translation="card.translation"
         :state="card.state"
         :status="card.status"
-        :translation="card.translation"
+        v-for="card in modifiedCards"
+        :key="card.word"
       />
     </div>
 
@@ -66,6 +71,7 @@
     gap: 50px 100px;
     flex-grow: 1;
     width: 100%;
+    counter-reset: count;
   }
 
   .main-btn {

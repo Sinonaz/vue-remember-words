@@ -1,6 +1,6 @@
 <template>
   <div class="card" @click="emit('flip')" :class="status">
-    <span class="card__number">{{ number }}</span>
+    <span class="card__number"></span>
 
     <div class="card__result">
       <IconSuccess v-if="status === 'success'" width="40" height="40" />
@@ -41,9 +41,6 @@
       validator(value) {
         return ['success', 'fail', 'pending'].includes(value)
       },
-    },
-    number: {
-      type: Number,
     },
   })
 </script>
@@ -107,6 +104,11 @@
     padding: 0 5px;
     font-size: 14px;
     background: white;
+    counter-increment: count;
+  }
+
+  .card__number::before {
+    content: counter(count, decimal-leading-zero);
   }
 
   .btn-success,
