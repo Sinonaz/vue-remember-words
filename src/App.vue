@@ -67,10 +67,11 @@
 
   .cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 65px 105px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 50px 100px;
     flex-grow: 1;
     width: 100%;
+    counter-reset: count;
   }
 
   .main-btn {
