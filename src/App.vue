@@ -1,18 +1,36 @@
 <script setup>
-  import { ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import AppButton from './components/AppButton.vue'
   import CardItem from './components/CardItem.vue'
   import TotalScore from './components/TotalScore.vue'
 
   const score = ref(0)
-  const cards = ref([
-    {
-      word: 'carom',
-      translation: '',
-      state: 'closed',
-      status: 'pending',
-    },
-  ])
+  const cards = ref([])
+
+  const modifiedCards = computed(() => {
+    if (!cards.value.length) return []
+
+    return cards.value.map((card) => {
+      return {
+        word: card.word,
+        translation: card.translation,
+        state: 'closed',
+        status: 'pending',
+      }
+    })
+  })
+
+  async function fetchCards() {
+    const response = await fetch('http://localhost:8080/api/random-words')
+
+    if (!response.ok) return
+
+    cards.value = await response.json()
+  }
+
+  onMounted(() => {
+    fetchCards()
+  })
 </script>
 
 <template>
@@ -25,10 +43,12 @@
 
     <div class="cards">
       <CardItem
-        :word="cards[0].word"
-        :translation="cards[0].translation"
-        :state="cards[0].state"
-        :status="cards[0].status"
+        v-for="card in modifiedCards"
+        :key="card.word"
+        :word="card.word"
+        :translation="card.translation"
+        :state="card.state"
+        :status="card.status"
       />
     </div>
 
@@ -46,6 +66,9 @@
   }
 
   .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 65px 105px;
     flex-grow: 1;
     width: 100%;
   }
