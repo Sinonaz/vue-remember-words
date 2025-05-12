@@ -43,12 +43,12 @@
 
     <div class="cards">
       <CardItem
-        v-for="card in modifiedCards"
-        :key="card.word"
         :word="card.word"
         :translation="card.translation"
         :state="card.state"
         :status="card.status"
+        v-for="card in modifiedCards"
+        :key="card.word"
       />
     </div>
 
