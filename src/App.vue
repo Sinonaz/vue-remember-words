@@ -1,11 +1,15 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue'
+  import { computed, provide, ref } from 'vue'
   import AppButton from './components/AppButton.vue'
   import CardItem from './components/CardItem.vue'
   import TotalScore from './components/TotalScore.vue'
+  import { scoreProvide } from '@/constants.js'
 
   const score = ref(0)
   const cards = ref([])
+  const gameStarted = ref(false)
+
+  provide(scoreProvide, score)
 
   const modifiedCards = computed(() => {
     if (!cards.value.length) return []
@@ -28,9 +32,11 @@
     cards.value = await response.json()
   }
 
-  onMounted(() => {
+  function startGame() {
+    gameStarted.value = true
+    score.value = 0
     fetchCards()
-  })
+  }
 </script>
 
 <template>
@@ -43,16 +49,18 @@
 
     <div class="cards">
       <CardItem
+        v-for="card in modifiedCards"
+        :key="card.word"
         :word="card.word"
         :translation="card.translation"
         :state="card.state"
         :status="card.status"
-        v-for="card in modifiedCards"
-        :key="card.word"
       />
     </div>
 
-    <AppButton class="main-btn"> Начать игру </AppButton>
+    <AppButton class="main-btn" @click="startGame">
+      {{ !gameStarted ? 'Начать игру' : 'Начать заново' }}
+    </AppButton>
   </main>
 </template>
 
