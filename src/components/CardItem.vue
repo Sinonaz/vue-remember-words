@@ -1,21 +1,25 @@
 <template>
-  <div class="card" @click="emit('flip')" :class="status">
+  <div
+    class="card"
+    @click.once="isOpened = true"
+    :style="{ cursor: answerStatus !== 'pending' ? 'default' : 'pointer' }"
+  >
     <span class="card__number"></span>
 
     <div class="card__result">
-      <IconSuccess v-if="status === 'success'" width="40" height="40" />
-      <IconFail v-else-if="status === 'fail'" width="40" height="40" />
+      <IconSuccess v-if="answerStatus === 'success'" width="40" height="40" />
+      <IconFail v-if="answerStatus === 'fail'" width="40" height="40" />
     </div>
 
-    <p class="card__word">{{ state === 'closed' ? word : translation }}</p>
+    <p class="card__word">{{ !isOpened ? word : translation }}</p>
 
-    <p v-if="state === 'closed'" class="card__label">Перевернуть</p>
+    <p v-if="answerStatus === 'pending' && !isOpened" class="card__label">Перевернуть</p>
 
-    <div v-if="state === 'opened'" class="card__btns">
-      <button class="btn-fail">
+    <div v-if="isOpened" class="card__btns">
+      <button class="btn-fail" @click="answer('fail')">
         <IconFail />
       </button>
-      <button class="btn-success">
+      <button class="btn-success" @click="answer('success')">
         <IconSuccess />
       </button>
     </div>
@@ -25,9 +29,10 @@
 <script setup>
   import IconFail from './Icons/IconFail.vue'
   import IconSuccess from './Icons/IconSuccess.vue'
+  import { inject, ref } from 'vue'
+  import { scoreProvide } from '@/constants.js'
 
-  const emit = defineEmits(['flip', 'update:status'])
-  defineProps({
+  const { word, translation, state, status } = defineProps({
     word: String,
     translation: String,
     state: {
@@ -43,6 +48,30 @@
       },
     },
   })
+
+  const isOpened = ref(state === 'opened')
+  const answerStatus = ref(status)
+
+  const score = inject(scoreProvide)
+
+  function answer(status) {
+    answerStatus.value = status
+    isOpened.value = false
+
+    updateScore(status === 'success')
+  }
+
+  function updateScore(isCorrect) {
+    if (score.value <= 0 && !isCorrect) {
+      return
+    }
+
+    if (isCorrect) {
+      score.value = score.value + 10
+    } else {
+      score.value = score.value - 4
+    }
+  }
 </script>
 
 <style>
@@ -56,7 +85,6 @@
     background: white;
     border-radius: 16px;
     box-shadow: 0px 0px 16px 0px #0000001a;
-    cursor: pointer;
     transition: box-shadow 0.2s;
 
     &::before {
